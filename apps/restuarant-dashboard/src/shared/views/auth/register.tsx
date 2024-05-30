@@ -144,7 +144,7 @@ const Register = () => {
             <input
               {...register('phone_number', { valueAsNumber: true })}
               type={'number'}
-              placeholder="9544533345"
+              placeholder="9244533345"
               className="input"
             />
           </div>
@@ -158,7 +158,7 @@ const Register = () => {
             <input
               {...register('email')}
               type={'text'}
-              placeholder="restaurant@becodemy.com"
+              placeholder="restaurant@gmail.com"
               className="input"
             />
           </div>

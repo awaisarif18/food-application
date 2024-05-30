@@ -21,11 +21,11 @@ const OrdersData = ({ isDashboard }: { isDashboard?: boolean }) => {
   [...Array(10)].map((i: OrdersDataType) => {
     rows.push({
       id: "123",
-      name: "shahriar sajeeb",
-      email: "support@becodemy.com",
+      name: "Muhammad Awais Arif",
+      email: "m.awaisarif16@gmail.com",
       title: "Juicy chicken burger",
       price: "12$",
-      created_at: "2days ago",
+      createdAt: "2days ago",
     });
   });
 
