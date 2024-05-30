@@ -6,5 +6,10 @@
 # nx cache
 .nx
 
+
+#env
+.env
+.env.local
+
 # DS store
 .DS_Store
