@@ -1,19 +1,19 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService, JwtVerifyOptions } from '@nestjs/jwt';
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { JwtService, JwtVerifyOptions } from "@nestjs/jwt";
 import {
   ActivationDto,
   ForgotPasswordDto,
   LoginDto,
   RegisterDto,
   ResetPasswordDto,
-} from './dto/user.dto';
-import { Response } from 'express';
-import * as bcrypt from 'bcrypt';
-import { EmailService } from './email/email.service';
-import { TokenSender } from './utils/sendToken';
-import { User } from '@prisma/client';
-import {PrismaService} from "../prisma/prisma.service";
+} from "./dto/user.dto";
+import { Response } from "express";
+import * as bcrypt from "bcrypt";
+import { EmailService } from "./email/email.service";
+import { TokenSender } from "./utils/sendToken";
+import { User } from "@prisma/client";
+import { PrismaService } from "../prisma/prisma.service";
 interface UserData {
   name: string;
   email: string;
@@ -27,7 +27,7 @@ export class UsersService {
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
     private readonly configService: ConfigService,
-    private readonly emailService: EmailService,
+    private readonly emailService: EmailService
   ) {}
 
   // register user service
@@ -40,7 +40,7 @@ export class UsersService {
       },
     });
     if (isEmailExist) {
-      throw new BadRequestException('User already exist with this email!');
+      throw new BadRequestException("User already exist with this email!");
     }
 
     const phoneNumbersToCheck = [phone_number];
@@ -56,7 +56,7 @@ export class UsersService {
 
     if (usersWithPhoneNumber.length > 0) {
       throw new BadRequestException(
-        'User already exist with this phone number!',
+        "User already exist with this phone number!"
       );
     }
 
@@ -77,8 +77,8 @@ export class UsersService {
 
     await this.emailService.sendMail({
       email,
-      subject: 'Activate your account!',
-      template: './activation-mail',
+      subject: "Activate your account!",
+      template: "./activation-mail",
       name,
       activationCode,
     });
@@ -96,9 +96,9 @@ export class UsersService {
         activationCode,
       },
       {
-        secret: this.configService.get<string>('ACTIVATION_SECRET'),
-        expiresIn: '5m',
-      },
+        secret: this.configService.get<string>("ACTIVATION_SECRET"),
+        expiresIn: "5m",
+      }
     );
     return { token, activationCode };
   }
@@ -109,11 +109,11 @@ export class UsersService {
 
     const newUser: { user: UserData; activationCode: string } =
       this.jwtService.verify(activationToken, {
-        secret: this.configService.get<string>('ACTIVATION_SECRET'),
+        secret: this.configService.get<string>("ACTIVATION_SECRET"),
       } as JwtVerifyOptions) as { user: UserData; activationCode: string };
 
     if (newUser.activationCode !== activationCode) {
-      throw new BadRequestException('Invalid activation code');
+      throw new BadRequestException("Invalid activation code");
     }
 
     const { name, email, password, phone_number } = newUser.user;
@@ -123,9 +123,9 @@ export class UsersService {
         email,
       },
     });
-
+    console.log("exist user", existUser);
     if (existUser) {
-      throw new BadRequestException('User already exist with this email!');
+      throw new BadRequestException("User already exist with this email!");
     }
 
     const user = await this.prisma.user.create({
@@ -158,7 +158,7 @@ export class UsersService {
         accessToken: null,
         refreshToken: null,
         error: {
-          message: 'Invalid email or password',
+          message: "Invalid email or password",
         },
       };
     }
@@ -167,7 +167,7 @@ export class UsersService {
   // compare with hashed password
   async comparePassword(
     password: string,
-    hashedPassword: string,
+    hashedPassword: string
   ): Promise<boolean> {
     return await bcrypt.compare(password, hashedPassword);
   }
@@ -179,9 +179,9 @@ export class UsersService {
         user,
       },
       {
-        secret: this.configService.get<string>('FORGOT_PASSWORD_SECRET'),
-        expiresIn: '5m',
-      },
+        secret: this.configService.get<string>("FORGOT_PASSWORD_SECRET"),
+        expiresIn: "5m",
+      }
     );
     return forgotPasswordToken;
   }
@@ -196,18 +196,18 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new BadRequestException('User not found with this email!');
+      throw new BadRequestException("User not found with this email!");
     }
     const forgotPasswordToken = await this.generateForgotPasswordLink(user);
 
     const resetPasswordUrl =
-      this.configService.get<string>('CLIENT_SIDE_URI') +
+      this.configService.get<string>("CLIENT_SIDE_URI") +
       `/reset-password?verify=${forgotPasswordToken}`;
 
     await this.emailService.sendMail({
       email,
-      subject: 'Reset your Password!',
-      template: './forgot-password',
+      subject: "Reset your Password!",
+      template: "./forgot-password",
       name: user.name,
       activationCode: resetPasswordUrl,
     });
@@ -222,7 +222,7 @@ export class UsersService {
     const decoded = await this.jwtService.decode(activationToken);
 
     if (!decoded || decoded?.exp * 1000 < Date.now()) {
-      throw new BadRequestException('Invalid token!');
+      throw new BadRequestException("Invalid token!");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -254,7 +254,7 @@ export class UsersService {
     req.user = null;
     req.refreshtoken = null;
     req.accesstoken = null;
-    return { message: 'Logged out successfully!' };
+    return { message: "Logged out successfully!" };
   }
 
   // get all users service
