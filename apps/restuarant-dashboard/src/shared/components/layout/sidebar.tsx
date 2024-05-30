@@ -1,16 +1,14 @@
 import Image from "next/image";
 import SideNav from "./side.nav";
 import { Icons } from "../../../utils/Icon";
-import profileImage from "../../../utils/Images/me.jpg";
 
 const Sidebar = () => {
-
   return (
     <div className="bg-[#111C43] h-screen">
       <div className="p-3 flex flex-col justify-around h-screen">
         <div className="w-[90%] flex flex-col items-center">
           <Image
-            src={profileImage}
+            src={"https://avatars.githubusercontent.com/u/87035691?v=4"}
             alt="profile-pic"
             width={120}
             height={120}

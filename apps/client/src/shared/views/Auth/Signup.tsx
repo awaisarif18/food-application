@@ -89,7 +89,7 @@ const Signup = ({
           <input
             {...register("phone_number", { valueAsNumber: true })}
             type="number"
-            placeholder="+9201*******"
+            placeholder="+8801*******"
             className={`${styles.input}`}
           />
           {errors.phone_number && (

@@ -12,8 +12,8 @@ const poppins = Poppins({
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Mint Food Delivery",
-  description: "Food Delivery website",
+  title: "Becodemy Food Delivery",
+  description: "Becodemy Food Delivery website",
 };
 
 export default function RootLayout({
